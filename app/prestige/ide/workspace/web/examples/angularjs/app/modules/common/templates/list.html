@@ -1,0 +1,190 @@
+<div ng-init="listAll()"></div>
+<!--<nav aria-label="breadcrumb" class="breadcrumb-nav">-->
+<!--  <ol class="breadcrumb">-->
+<!--    <li class="breadcrumb-item active" aria-current="page">{{getTitle('list')}}&nbsp;<spinner></spinner></li>-->
+<!--  </ol>-->
+<!--</nav>-->
+<bread-crumb args='{{getTitle("list")}}' ></bread-crumb>
+
+<section class="row justify-content-center">
+<section class="wide-card">
+    <div class="card">
+    	<div class="card-header"><span class="large">MANAGE {{getTitle('list')}}</span>
+	    	<div class="float-right">
+            	<a href="{{newRouteHref}}" ng-if='data.permissions.add.indexOf(currentUser.role) > -1'>
+	                <button type="button" class="btn btn-dark btn-sm">
+	                    {{M.TITLE_ADD_PREFIX}}
+	                </button>
+            	</a>
+		</div>
+    	</div>
+    	<div class="card-body">
+			<div ng-include src="getTemplate('list-header')"></div>
+			
+			<div class="options-container form-card card card-body" ng-if="data.displayOptions">
+				<form name="forms.{{resourceName}}OptionsForm" id="forms.{{resourceName}}OptionsForm">
+					<div class="form-group row">
+						<div class="col-md-1"></div>
+						<div class="col-md-6"><h5>{{M.TITLE_OPTIONS}}</h5></div>
+					</div>
+					<div class="form-group row">
+						<div class="col-md-1"></div>
+						<div class="col-md-2 text-md-left" style="margin-top: 7px">
+							<span  style="margin-top: 7px">{{M.FIELD_SEARCH}} for </span>
+						</div>
+						<div class="col-md-4">
+							<input id="{{resourceName}}_search" name="{{resourceName}}_search" type="{{data.singleKeysInfo[i].type}}" class="form-control" ng-model="data.queryOptions.search">
+						</div>
+						<div class="col-md-1 text-md-center" style="margin-top: 7px">
+							<span class="justify-content-md-center"> in </span>
+						</div>
+						<div class="col-md-3">
+							<div class="dropdown">
+							  <button class="btn btn-default dropdown-toggle" type="button" id="{{resourceName}}_search_in" name="{{resourceName}}_search_in" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								{{ data.singleKeysInfo[data.queryOptions.searchField].title || 'Choose an option' }}
+							  </button>
+							  <div class="dropdown-menu" aria-labelledby="{{resourceName}}_search_in">
+							    <a class="dropdown-item" ng-repeat="r in data.singleKeys"  href="" ng-click="data.queryOptions.searchField = r;">{{ data.singleKeysInfo[r].title }}</a>
+							  </div>
+							</div>			
+						</div>
+					</div>
+			
+					<div class="form-group row">
+						<div class="col-md-1"></div>
+						<div class="col-md-2 text-md-left" style="margin-top: 7px">
+							<span  style="margin-top: 7px"> Order by </span>
+						</div>
+						<div class="col-md-3">
+							<div class="dropdown">
+							  <button class="btn btn-default dropdown-toggle" type="button" id="{{resourceName}}_order_by" name="{{resourceName}}_order_by" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							    {{ data.singleKeysInfo[data.queryOptions.orderBy].title || 'Choose an option' }}
+							  </button>
+							  <div class="dropdown-menu" aria-labelledby="{{resourceName}}_order_by">
+							    <a class="dropdown-item" ng-repeat="r in data.singleKeys"  href="" ng-click="data.queryOptions.orderBy = r;">{{ data.singleKeysInfo[r].title }}</a>
+							  </div>
+							</div>			
+						</div>
+						<div class="col-md-1 text-md-center" style="margin-top: 7px">
+							<span class="justify-content-md-center"> in </span>
+						</div>
+						<div class="col-md-2">
+							<div class="dropdown">
+							  <button class="btn btn-default dropdown-toggle" type="button" id="{{resourceName}}_search_in" name="{{resourceName}}_search_in" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								{{ data.queryOptions.orderDirection.title || 'Choose an option' }}
+							  </button>
+							  <div class="dropdown-menu" aria-labelledby="{{resourceName}}_search_in">
+							    <a class="dropdown-item" ng-repeat="r in [{title: 'Ascending', key: 'asc'}, {title: 'Descending', key: 'desc'}]"  href="" ng-click="data.queryOptions.orderDirection = r;">{{ r.title }}</a>
+							  </div>
+							</div>			
+						</div>			
+					</div>
+
+					<div class="form-group row">
+						<div class="col-md-1"></div>
+						<div class="col-md-2 text-md-left" style="margin-top: 7px">
+							<span  style="margin-top: 7px"> Page Size </span>
+						</div>
+						<div class="col-md-3">
+							<div class="dropdown">
+							  <button class="btn btn-default dropdown-toggle" type="button" id="{{resourceName}}_page_size" name="{{resourceName}}_page_size" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							    {{ data.queryOptions.limit || 'Choose an option' }}
+							  </button>
+							  <div class="dropdown-menu" aria-labelledby="{{resourceName}}_page_size">
+							    <a class="dropdown-item" ng-repeat="r in [1, 5, 10, 50, 100, 500, 1000, 5000, 10000, 20000, 25000, 50000, 100000]"  href="" ng-click="data.queryOptions.limit = r;">{{ r }}</a>
+							  </div>
+							</div>			
+						</div>
+					</div>					
+					
+					<div class="form-group row">
+						<div class="col-md-1"></div>
+						<div class="col-md-2 text-md-left" style="margin-top: 7px">
+							<span  style="margin-top: 7px"> RAW Data: </span>
+						</div>
+						<div class="col-md-3">
+							<div class="custom-control custom-switch form-switch">
+								<input class="custom-control-input" type="checkbox" id="{{resourceName}}_enable_row_data" name="{{resourceName}}_enable_row_data" ng-true-value="1"  ng-false-value="0" ng-model="data.viewOptions.rawDataTemp" > 
+								<label class="custom-control-label" for="{{resourceName}}_enable_row_data"></label>
+							</div>
+						</div>
+		
+					</div>							
+
+					
+					<div class="form-group row">
+						<div class="col-md-1"></div>
+						<div class="col-md-6">
+							<spinner></spinner>
+							<button type="submit" name="forms.{{resourceName}}OptionsForm" ng-click="applyOptions();" class="btn btn-link">
+								{{ M.BTN_APPLY }}
+							</button>
+							<button type="button" ng-click="data.queryOptions = {}" class="btn btn-link">
+								{{ M.BTN_CLEAR }}
+							</button>
+							<button type="button" ng-click="data.viewOptions.mediaLabels = !data.viewOptions.mediaLabels" class="btn btn-link">
+								<span ng-if="data.viewOptions.mediaLabels">Hide Media Labels</span>
+								<span ng-if="!data.viewOptions.mediaLabels">Show Media Labels</span>
+							</button>
+							
+						</div>
+					</div>		
+				</form>
+			</div>			
+			
+			<div class="row">
+				<div class="col-md-1">
+					<div class="btn btn-link" style="margin-top: -8px; margin-left:-10px" ng-click="data.displayOptions = !data.displayOptions;">Options</div>
+				</div>
+				<div class="col-md-10"></div>
+				<div class="col-md-1">
+					<div ng-if="data.records" class="float-right small italic bold">{{data.records}} record{{data.records == 1 ? '' : 's'}}</div>		
+				</div>
+			</div>
+
+			<div style="overflow:auto">
+				<table class="table" ng-if="!templates['list-items']">
+				        <thead class="thead-light">
+				          <tr>
+				              <!--<th ng-repeat="h in data.listHeaders">{{h}}</th>-->
+						<th ng-repeat="h in data.listHeaders"><span ng-click="applySort(data.listKeys[$index])" class="clickable-table-headers">{{h}} <span ng-if="data.singleKeysInfo[data.queryOptions.orderBy].title == h"><span ng-if="data.sortCache[data.listKeys[$index]]=='asc'"> <i class="material-icons sort-arrows">arrow_drop_up</i></span><span ng-if="data.sortCache[data.listKeys[$index]]=='desc'"> <i class="material-icons sort-arrows">arrow_drop_down</i></span> <spinner></spinner> </span> </span></th>						  
+				              <th ng-if="data.listHeaders.length > 0">Actions</th>
+				          </tr>
+				        </thead>
+				        <tbody>
+				          <tr ng-repeat="item in data.list" ng-include src="getTemplate('list-item')" ng-if="!templates['list-item']">
+				          </tr>
+				          <tr ng-repeat="item in data.list" ng-include="templates['list-item']" ng-if="templates['list-item']">
+				          </tr>
+				        </tbody>
+				</table>
+				<div ng-include="templates['list-items']"></div>
+			</div>
+
+
+             <div class="row justify-content-center">
+				<nav aria-label="Page navigation">
+				  <ul class="pagination " ng-show="data.listHeaders.length > 0 && data.list.length > 0">
+				  	<li class="page-item" style="{{ (currentPage - 1 > 0) ? 'cursor: pointer;' :  'cursor: not-allowed;' }}">
+				      <a class="page-link" aria-label="Previous" ng-click="listAllPrev()">
+				        <span aria-hidden="true">&laquo;</span>
+				        <span class="sr-only">Previous</span>
+				      </a>
+				    </li>
+				  	<li class="page-item {{setActive(i)}}" ng-repeat="i in data.pages" style="cursor: pointer;"><a class="page-link" ng-click="listAll(i)">{{i}}</a></li>
+				  	<li class="page-item" style="{{ (currentPage + 1 <= data.pages.length) ? 'cursor: pointer;' : 'cursor: not-allowed;' }}">
+				      <a class="page-link" aria-label="Previous" ng-click="listAllNext()">
+				        <span aria-hidden="true">&raquo;</span>
+				        <span class="sr-only">Previous</span>
+				      </a>
+				    </li>
+				  </ul>
+				</nav>  
+             </div>
+             
+            <div ng-include src="getTemplate('list-footer')"></div>
+    	</div>
+    </div>
+</section>
+</section>
+<div ng-include src="getTemplate('list')"></div>

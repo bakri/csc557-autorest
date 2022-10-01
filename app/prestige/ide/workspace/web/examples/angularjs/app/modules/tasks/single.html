@@ -1,0 +1,122 @@
+<!--This is the template that will be used in new/edit screens. It should be in <form></form> tag. The name of the form should be matching the name of your API route, prefixed with 'froms.' and suffixed by 'Form'. e.g. in this case, it would be 'forms.tasksForm'-->
+
+<!--Dynamic Example-->
+<form name="forms.{{resourceName}}Form" id="forms.{{resourceName}}Form">
+	<div ng-repeat="i in data.singleKeys">
+     	<div class="form-group row"  ng-if="!(['bool', 'fkey', 'date', 'datetime', 'textarea'].indexOf(data.singleKeysInfo[i].type) > -1) && i != 'id' && !(i.endsWith('_file') || i.endsWith('_image') || i.endsWith('_photo') || i.endsWith('_video') || i.endsWith('_sound') || i.endsWith('_music') || i.endsWith('_audio') || i.endsWith('_attachment') || i.endsWith('file') || i.endsWith('attachment') || i.endsWith('image')) ">
+			<label for="{{resourceName}}_{{i}}" class="col-md-4 col-form-label text-md-right">{{data.singleKeysInfo[i].title}}: <span ng-if="data.singleKeysInfo[i].required" class="small col-red">*</span></label>
+			<div class="col-md-6">
+				<input id="{{resourceName}}_{{i}}" name="{{resourceName}}_{{i}}" type="{{data.singleKeysInfo[i].type}}" class="form-control" ng-model="data.single[i]" ng-required="data.singleKeysInfo[i].required" ng-disabled="locked">
+				<!--<div ng-messages="forms[resourceName + 'Form'][resourceName + '_'  + i].$error" ng-show="forms[resourceName + 'Form'][resourceName + '_'  + i].$dirty">-->
+				<!--	<div ng-message="required" ng-if="data.singleKeysInfo[i].required" class="small col-red">{{M.REQUIRED}}</div>-->
+				<!--</div>-->
+				<div ng-if="data.singleKeysInfo[i].required && !data.single[i] && saveClicked" class="small col-red">{{M.REQUIRED}}</div>
+			</div>
+     	</div>
+     	<div class="form-group row"  ng-if="data.singleKeysInfo[i].type == 'textarea'">
+			<label for="{{resourceName}}_{{i}}" class="col-md-4 col-form-label text-md-right">{{data.singleKeysInfo[i].title}}: <span ng-if="data.singleKeysInfo[i].required" class="small col-red">*</span></label>
+			<div class="col-md-6">
+				<textarea id="{{resourceName}}_{{i}}" name="{{resourceName}}_{{i}}" type="{{data.singleKeysInfo[i].type}}" class="form-control" ng-model="data.single[i]" ng-required="data.singleKeysInfo[i].required" ng-disabled="locked"></textarea>
+				<!--<div ng-messages="forms[resourceName + 'Form'][resourceName + '_'  + i].$error" ng-show="forms[resourceName + 'Form'][resourceName + '_'  + i].$dirty">-->
+				<!--	<div ng-message="required" ng-if="data.singleKeysInfo[i].required" class="small col-red">{{M.REQUIRED}}</div>-->
+				<!--</div>-->
+				<div ng-if="data.singleKeysInfo[i].required && !data.single[i] && saveClicked" class="small col-red">{{M.REQUIRED}}</div>
+			</div>
+     	</div> 
+     	<div class="form-group row" ng-if="data.singleKeysInfo[i].type == 'bool'">
+			<label for="{{resourceName}}_{{i}}" class="col-md-4 col-form-label text-md-right">{{data.singleKeysInfo[i].title}}: <span ng-if="data.singleKeysInfo[i].required" class="small col-red">*</span></label>
+			<div class="col-md-6">
+			<div class="custom-control custom-switch form-switch">
+				<input class="custom-control-input" type="checkbox" id="{{resourceName}}_{{i}}" name="{{resourceName}}_{{i}}" ng-true-value="1"  ng-false-value="0" ng-model="data.single[i]" ng-required="data.singleKeysInfo[i].required" ng-disabled="locked"> 
+				<label class="custom-control-label" for="{{resourceName}}_{{i}}"></label>
+			</div>
+			</div>
+     	</div>
+		<div class="form-group row" ng-if="data.singleKeysInfo[i].type == 'fkey'">
+			<label for="{{resourceName}}_{{i}}" class="col-md-4 col-form-label text-md-right">{{data.singleKeysInfo[i].title}}: <span ng-if="data.singleKeysInfo[i].required" class="small col-red">*</span></label>
+			<div class="col-md-6">
+				<div class="dropdown">
+				  <button class="btn btn-default dropdown-toggle" type="button" id="{{resourceName}}_{{i}}" name="{{resourceName}}_{{i}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-disabled="locked">
+				    {{ data.selectedForeignKeys[i].display_title || data.selectedForeignKeys[i].title || data.selectedForeignKeys[i].display_name || data.selectedForeignKeys[i].name || (data.selectedForeignKeys[i].first_name ? data.selectedForeignKeys[i].first_name + ' ' + data.selectedForeignKeys[i].last_name : null) || data.selectedForeignKeys[i].email || data.selectedForeignKeys[i].id || data.single[i.substring(0, i.length - 3)].display_title || data.single[i.substring(0, i.length - 3)].title || data.single[i.substring(0, i.length - 3)].display_name || data.single[i.substring(0, i.length - 3)].name || (data.single[i.substring(0, i.length - 3)].first_name ? data.single[i.substring(0, i.length - 3)].first_name + ' ' + data.single[i.substring(0, i.length - 3)].last_name : null) || data.single[i.substring(0, i.length - 3)].email || 'Choose an option' }}
+				  </button>
+				  <div class="dropdown-menu" aria-labelledby="{{resourceName}}_{{i}}">
+				    <a class="dropdown-item" ng-repeat="r in data.foreignKeys[H.toPlural(data.singleKeysInfo[i].title.replace(' ', '_').toLowerCase())]"  href="" ng-click="data.single[i] = r.id;data.selectedForeignKeys[i] = r;">{{ r.title || r.display_name || r.name || (r.first_name ? r.first_name + ' ' + r.last_name : null) || r.email || r.id }}</a>
+				  </div>
+				</div>
+				<input type="hidden" class="form-control" id="{{resourceName}}_{{i}}" name="{{resourceName}}_{{i}}" ng-model="data.single[i]" ng-required="data.singleKeysInfo[i].required" />
+				<div ng-if="data.singleKeysInfo[i].required && !data.single[i] && saveClicked" class="small col-red">{{M.REQUIRED}}</div>
+			</div>    
+		</div>
+		<div class="form-group row" ng-if="data.singleKeysInfo[i].type == 'date' || data.singleKeysInfo[i].type == 'datetime'">
+			<label for="{{resourceName}}_{{i}}" class="col-md-4 col-form-label text-md-right">{{data.singleKeysInfo[i].title}}: <span ng-if="data.singleKeysInfo[i].required" class="small col-red">*</span></label>
+			<div class="col-md-6">
+					<datepicker date-format="yyyy-MM-dd">
+									 <input type="text" 
+										name="{{resourceName}}_{{i}}" 
+								        	class="form-control" 
+								        	ng-model="data.single[i]" 
+								        	ng-required="data.singleKeysInfo[i].required"
+										ng-disabled="locked"
+								        	>
+								</datepicker>
+					<div ng-if="data.singleKeysInfo[i].required && !data.single[i] && saveClicked" class="small col-red">{{M.REQUIRED}}</div>
+			</div>    
+		</div>
+     	<div class="form-group row" ng-if="(i.endsWith('_file') || i.endsWith('_image') || i.endsWith('_photo') || i.endsWith('_video') || i.endsWith('_sound') || i.endsWith('_music') || i.endsWith('_audio') || i.endsWith('_attachment') || i.endsWith('file') || i.endsWith('attachment') || i.endsWith('image') )">
+			<label for="{{resourceName}}_{{i}}" class="col-md-4 col-form-label text-md-right">{{data.singleKeysInfo[i].title}}: <span ng-if="data.singleKeysInfo[i].required" class="small col-red">*</span></label>
+			<div class="col-md-6">
+				<file-upload ng-if="!locked" callback="data.onuploadCallbacks[i]"></file-upload>
+				<video class="file-field" controls ng-if="['mp4'].indexOf(data.single[i].substr(data.single[i].length - 3)) > -1">
+				  <source ng-src="{{ S.baseUrl + '/' + data.single[i] }}" type="video/{{data.single[i].substr(data.single[i].length - 3)}}">
+				  Your browser does not support the video tag.
+				</video>				
+				<audio class="file-field" controls ng-if="['mp3', 'ogg'].indexOf(data.single[i].substr(data.single[i].length - 3)) > -1">
+				  <source ng-src="{{ S.baseUrl + '/' + data.single[i] }}" type="audio/{{data.single[i].substr(data.single[i].length - 3)}}">
+				  Your browser does not support the audio tag.
+				</audio>				
+				<img class="file-field" ng-if="['jpg', 'png', 'gif'].indexOf(data.single[i].substr(data.single[i].length - 3)) > -1 || ['jpeg'].indexOf(data.single[i].substr(data.single[i].length - 4)) > -1" ng-src="{{ S.baseUrl + '/' + data.single[i] }}">
+				<div class="file-field" >
+					<a ng-if="data.single[i]" ng-href="{{ S.baseUrl + '/' + data.single[i] }}">{{data.single[i].substr(data.single[i].lastIndexOf('/') + 1)}}</a>	
+				</div>
+				<input type="hidden" class="form-control" id="{{resourceName}}_{{i}}" name="{{resourceName}}_{{i}}" ng-model="data.single[i]" ng-required="data.singleKeysInfo[i].required" />
+				<div ng-if="data.singleKeysInfo[i].required && !data.single[i] && saveClicked" class="small col-red">{{M.REQUIRED}}</div>
+			</div>
+			<div class="col-md-1" ng-if="!locked && data.single[i]" >
+				<button type='button' class="btn btn-link" ng-click="data.single[i] = '';">Clear</button>
+			</div>
+			<div ng-messages="forms[resourceName + 'Form'][resourceName + '_'  + i].$error" ng-show="forms[resourceName + 'Form'][resourceName + '_'  + i].$dirty">
+				<div ng-message="required" ng-if="data.singleKeysInfo[i].required" class="small col-red">{{M.REQUIRED}}</div>
+			</div>
+     	</div>		
+	</div>
+</form>
+
+<!--Static Example-->
+<!--
+<form name="forms.tasksForm" id="forms.tasksForm">
+	<div class="form-group row">
+		<label for="task_title" class="col-md-4 col-form-label text-md-right">{{M.FIELD_TITLE}}:</label>
+		<div class="col-md-6">
+			<input id="task_title" name="task_title" type="text" class="form-control" ng-model="data.single.title" required ng-disabled="locked" autofocus>
+		</div>
+		<div ng-messages="forms.tasksForm.task_title.$error" ng-show="forms.tasksForm.task_title.$dirty">
+			<div class="small col-red" ng-message="required">{{M.REQUIRED}}</div>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label for="task_is_active" class="col-md-4 col-form-label text-md-right">{{M.FIELD_ACTIVE}}:</label>
+		<div class="col-md-6">
+			<div class="custom-control custom-switch form-switch">
+				<input class="custom-control-input" type="checkbox" id="task_is_active" name="task_is_active" ng-disabled="locked" ng-true-value="1" ng-false-value="0" ng-model="data.single.is_active">
+				<label class="custom-control-label" for="task_is_active"></label>
+			</div>
+		</div>
+	</div>
+    <div class="form-group row">
+        <div class='col-md-6 offset-md-4'>
+          <p class="small col-red" ng-if="error">{{error}}</p>
+          <div class="alerts-container"></div>
+        </div>
+    </div>
+</form>
+-->
