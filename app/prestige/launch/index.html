@@ -1,0 +1,628 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>pRESTige</title>
+
+    <!--[if lt IE 9]>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+        <![endif]-->
+
+    <!--Append / at the end of URL to load everything properly -->
+    <script>
+        window.onload = function () {
+            var location = "" + window.location;
+            if (location.charAt(location.length - 1) !== '/' && !location.endsWith('.html')) {
+                var newLocation = location + "/";
+                //force redirect to https
+				// if(newLocation.startsWith('http:')){
+				// 	newLocation = newLocation.replace('http:', 'https:')
+				// }                
+                window.location = newLocation;
+            }
+            //materialBackground.start();
+        }
+    </script>
+
+    <link rel="shortcut icon" href="../ide/workspace/web/examples/angularjs/images/favicon.ico" />    
+
+    <!--<script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tour/0.11.0/js/bootstrap-tour-standalone.js" 
+            integrity="sha256-1oQqWoYRKhIK87UIfRmlDObEHrO1rj2E3lv7cCSV4y0=" 
+            crossorigin="anonymous"
+            ></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css"
+        id="bootstrap-css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tour/0.11.0/css/bootstrap-tour-standalone.css" 
+            integrity="sha256-OdRIC3/VFxsszf6c8mx8eFrhtR3Ct8sxVXxZwonSUdg=" 
+            crossorigin="anonymous"
+            />
+
+    <!-- Loader CSS -->
+    <style>
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid blue;
+            border-right: 16px solid green;
+            border-bottom: 16px solid red;
+            border-left: 16px solid pink;
+            width: 152px;
+            height: 152px;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+            left: 50%;
+            margin-top: -60px;
+            margin-left: -60px;
+            position: absolute;
+            top: 50%;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+
+    <script>
+        var materialBackground = {
+            currentZIndex: 0, //Z-index of the current level
+            // colors: [
+            //     ["#ffebee", "#ffcdd2", "#ef9a9a", "#e57373", "#ef5350", "#f44336", "#e53935", "#d32f2f", "#c62828", "#b71c1c"],
+            //     ["#fce4ec", "#f8bbd0", "#f48fb1", "#f06292", "#ec407a", "#e91e63", "#d81b60", "#c2185b", "#ad1457", "#880e4f"],
+            //     ["#f3e5f5", "#e1bee7", "#ce93d8", "#ba68c8", "#ab47bc", "#9c27b0", "#8e24aa", "#7b1fa2", "#6a1b9a", "#4a148c"],
+            //     ["#ede7f6", "#d1c4e9", "#b39ddb", "#9575cd", "#7e57c2", "#673ab7", "#5e35b1", "#512da8", "#4527a0", "#311b92"],
+            //     ["#e8eaf6", "#c5cae9", "#9fa8da", "#7986cb", "#5c6bc0", "#3f51b5", "#3949ab", "#303f9f", "#283593", "#1a237e"],
+            //     ["#e3f2fd", "#bbdefb", "#90caf9", "#64b5f6", "#42a5f5", "#2196f3", "#1e88e5", "#1976d2", "#1565c0", "#0d47a1"],
+            //     ["#e1f5fe", "#b3e5fc", "#81d4fa", "#4fc3f7", "#29b6f6", "#03a9f4", "#039be5", "#0288d1", "#0277bd", "#01579b"],
+            //     ["#e0f7fa", "#b2ebf2", "#80deea", "#4dd0e1", "#26c6da", "#00bcd4", "#00acc1", "#0097a7", "#00838f", "#006064"],
+            //     ["#e0f2f1", "#b2dfdb", "#80cbc4", "#4db6ac", "#26a69a", "#009688", "#00897b", "#00796b", "#00695c", "#004d40"],
+            //     ["#e8f5e9", "#c8e6c9", "#a5d6a7", "#81c784", "#66bb6a", "#4caf50", "#43a047", "#388e3c", "#2e7d32", "#1b5e20"],
+            //     ["#f1f8e9", "#dcedc8", "#c5e1a5", "#aed581", "#9ccc65", "#8bc34a", "#7cb342", "#689f38", "#558b2f", "#33691e"],
+            //     ["#f9fbe7", "#f0f4c3", "#e6ee9c", "#dce775", "#d4e157", "#cddc39", "#c0ca33", "#afb42b", "#9e9d24", "#827717"],
+            //     ["#fffde7", "#fff9c4", "#fff59d", "#fff176", "#ffee58", "#ffeb3b", "#fdd835", "#fbc02d", "#f9a825", "#f57f17"],
+            //     ["#fff8e1", "#ffecb3", "#ffe082", "#ffd54f", "#ffca28", "#ffc107", "#ffb300", "#ffa000", "#ff8f00", "#ff6f00"],
+            //     ["#fff3e0", "#ffe0b2", "#ffcc80", "#ffb74d", "#ffa726", "#ff9800", "#fb8c00", "#f57c00", "#ef6c00", "#e65100"],
+            //     ["#fbe9e7", "#ffccbc", "#ffab91", "#ff8a65", "#ff7043", "#ff5722", "#f4511e", "#e64a19", "#d84315", "#bf360c"],
+            //     ["#efebe9", "#d7ccc8", "#bcaaa4", "#a1887f", "#8d6e63", "#795548", "#6d4c41", "#5d4037", "#4e342e", "#3e2723"],
+            //     ["#fafafa", "#f5f5f5", "#eeeeee", "#e0e0e0", "#bdbdbd", "#9e9e9e", "#757575", "#616161", "#424242", "#212121"],
+            //     ["#eceff1", "#cfd8dc", "#b0bec5", "#90a4ae", "#78909c", "#607d8b", "#546e7a", "#455a64", "#37474f", "#263238"]
+            // ], // The current colours, in a 2D array.
+            // shapes: ["left-rectangle", "right-rectangle", "circle-small", "circle-large"], // the shapes currently in use.
+            colors: [
+                ["#ffebee", "#ffcdd2", "#ef9a9a", "#e57373", "#ef5350", "#f44336", "#e53935", "#d32f2f", "#c62828", "#b71c1c"],
+                ["#ede7f6", "#d1c4e9", "#b39ddb", "#9575cd", "#7e57c2", "#673ab7", "#5e35b1", "#512da8", "#4527a0", "#311b92"],
+                ["#e8eaf6", "#c5cae9", "#9fa8da", "#7986cb", "#5c6bc0", "#3f51b5", "#3949ab", "#303f9f", "#283593", "#1a237e"],
+                ["#e3f2fd", "#bbdefb", "#90caf9", "#64b5f6", "#42a5f5", "#2196f3", "#1e88e5", "#1976d2", "#1565c0", "#0d47a1"],
+                ["#e1f5fe", "#b3e5fc", "#81d4fa", "#4fc3f7", "#29b6f6", "#03a9f4", "#039be5", "#0288d1", "#0277bd", "#01579b"],
+                ["#e0f7fa", "#b2ebf2", "#80deea", "#4dd0e1", "#26c6da", "#00bcd4", "#00acc1", "#0097a7", "#00838f", "#006064"],
+                ["#e0f2f1", "#b2dfdb", "#80cbc4", "#4db6ac", "#26a69a", "#009688", "#00897b", "#00796b", "#00695c", "#004d40"],
+                ["#e8f5e9", "#c8e6c9", "#a5d6a7", "#81c784", "#66bb6a", "#4caf50", "#43a047", "#388e3c", "#2e7d32", "#1b5e20"],
+                ["#f1f8e9", "#dcedc8", "#c5e1a5", "#aed581", "#9ccc65", "#8bc34a", "#7cb342", "#689f38", "#558b2f", "#33691e"],
+                ["#fbe9e7", "#ffccbc", "#ffab91", "#ff8a65", "#ff7043", "#ff5722", "#f4511e", "#e64a19", "#d84315", "#bf360c"]
+            ], // The current colours, in a 2D array.
+            shapes: ["left-rectangle", "right-rectangle"], // the shapes currently in use.            
+            circleCount: 0,
+            nightTheme: false, // The theme options.
+            simpleTheme: false,
+
+            start() {
+                $("#material-background").empty();
+                this.circleCount = 0;
+                this.currentZIndex = 0; // Clean reset of the stats when start is called.
+                this.currentColorStrength = 0;
+
+                var rColorChoice = Math.floor((Math.random() * this.colors.length));
+                var rDarknessColor = Math.floor((Math.random() * 4) + 2);
+                $("#material-background").css("background-color", this.colors[rColorChoice][rDarknessColor - 1]);
+
+                this.drawSecondaryBackground(this.colors[rColorChoice][rDarknessColor]);
+
+                var rNightThemeChoice = Math.floor((Math.random() * 5) + 1);
+                if (rNightThemeChoice == 1) {
+                    this.nightTheme = true;
+                    $("#material-background").css("background-color", "#121212");
+                }
+                else if (rNightThemeChoice == 2) {
+                    this.simpleTheme = true;
+                    $("#material-background").css("background-color", "#f2f2f2");
+                }
+
+                var rShapeCount = Math.floor((Math.random() * 5) + 3); //Generate a random number.
+                for (var i = 0; i < rShapeCount; i++) { //For each random No. we can apply a shape from the array.
+                    var rShapeSize = Math.floor((Math.random() * this.shapes.length));
+                    this.randomize(this.shapes[rShapeSize], rColorChoice, rDarknessColor);
+
+                    var escalateChance = Math.floor((Math.random() * 3));
+                    if (escalateChance <= 1) {
+                        if (this.currentZIndex >= 4) {
+                            console.log("Reached max colors."); // if it is escalated too far, the max colors log is shown.
+                        }
+                        else {
+                            this.currentZIndex++;
+                        }
+                    }
+                }
+            },
+
+            drawSecondaryBackground(color) {
+                var rSecondaryBackground = Math.floor((Math.random() * 3));
+                if (rSecondaryBackground == 1) {
+                    var b = Math.floor((Math.random() * 60) + 30);
+                    var c = Math.floor((Math.random() * 30) + 10);
+                    var skewLevel = Math.floor((Math.random() * 20) + -20);
+                    $("#material-background").append("<div style='background-color: " + color + "; left: " + c + "%; width: " + b + "%; transform: skew(" + skewLevel + "deg); -webkit-transform: skew(" + skewLevel + "deg);' class='material-parallelogram material-shadow-low'></div>");
+
+                    var doubleChance = Math.floor((Math.random() * 5));
+                    if (doubleChance == 2) {
+                        $("#material-background").append("<div style='background-color: " + color + "; left: " + (c + 10) + "%; width: " + (b * 2) + "%; transform: skew(" + skewLevel + "deg); -webkit-transform: skew(" + skewLevel + "deg);' class='material-parallelogram material-shadow-strong'></div>");
+                    }
+                } // Draw a larger shape area on screen.
+            },
+
+            randomize(shapeType, colorChoice, darkness) {
+
+                if (shapeType == "left-rectangle") {
+                    // Create a left-rectangle 
+                    var width = Math.floor((Math.random() * 270) + 80);
+                    var rotation = Math.floor((Math.random() * 180) + 1);
+                    $("#material-background").append("<div style=\'transform: rotate(" + rotation + "deg); width: " + width + "px; background-color: " + materialBackground.colors[colorChoice][darkness + materialBackground.currentZIndex] + "\' class=\'material-rectangle-left material-shadow-strong\'></div>");
+
+                }
+                else if (shapeType == "right-rectangle") {
+                    // Create a right-rectangle
+                    var width = Math.floor((Math.random() * 270) + 80);
+                    var rotation = Math.floor((Math.random() * 180) + 1);
+                    $("#material-background").append("<div style=\'transform: rotate(" + rotation + "deg); width: " + width + "px; background-color: " + materialBackground.colors[colorChoice][darkness + materialBackground.currentZIndex] + "\' class=\'material-rectangle-right material-shadow-strong\'></div>");
+
+                }
+                else if (shapeType == "circle-large") {
+                    // Create a large circle.
+                    if (this.circleCount <= 0) {
+
+                        var left = Math.floor((Math.random() * 90) + 1);
+                        var top = Math.floor((Math.random() * 90) + 1);
+                        var rAColorChoice = Math.floor((Math.random() * materialBackground.colors.length));
+                        $("#material-background").append("<div style=\'left: " + left + "%; top: " + top + "%; background-color: " + materialBackground.colors[rAColorChoice][8] + "\' class=\'material-circle-large material-shadow-strongest\'></div>");
+
+                        this.circleCount++;
+
+                    }
+                    else {
+                        this.randomize("left-rectangle", colorChoice, darkness);
+                    }
+
+                }
+                else if (shapeType == "circle-small") {
+                    // Create a smaller circle.
+                    if (this.circleCount <= 0) {
+
+                        var left = Math.floor((Math.random() * 90) + 1);
+                        var top = Math.floor((Math.random() * 90) + 1);
+                        var rAColorChoice = Math.floor((Math.random() * materialBackground.colors.length));
+                        $("#material-background").append("<div style=\'left: " + left + "%; top: " + top + "%; background-color: " + materialBackground.colors[rAColorChoice][8] + "\' class=\'material-circle-small material-shadow-strongest\'></div>");
+
+                        this.circleCount++;
+
+                    }
+                    else {
+                        this.randomize("left-rectangle", colorChoice, darkness);
+                    }
+
+                }
+            }
+        };
+    </script>
+
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        #material-background {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-color: #3F51B5;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        #material-background .material-rectangle-left {
+            position: absolute;
+            height: calc(380% + 920px);
+            margin-top: -420px;
+            width: 30%;
+            background-color: #303F9F;
+            -ms-transform: rotate(7deg);
+            /* IE 9 */
+            -webkit-transform: rotate(7deg);
+            /* Chrome, Safari, Opera */
+            transform: rotate(7deg);
+            left: -10%;
+            top: -100%;
+            z-index: 100;
+        }
+
+        #material-background .material-rectangle-right {
+            position: absolute;
+            height: calc(380% + 920px);
+            margin-top: -420px;
+            width: 30%;
+            background-color: #303F9F;
+            -ms-transform: rotate(7deg);
+            /* IE 9 */
+            -webkit-transform: rotate(7deg);
+            /* Chrome, Safari, Opera */
+            transform: rotate(7deg);
+            right: -10%;
+            top: -100%;
+            z-index: 100;
+        }
+
+        #material-background .material-circle-small {
+            margin-top: -30px;
+            margin-left: -30px;
+            border-radius: 50%;
+            width: 200px;
+            height: 200px;
+            background-color: #F44336;
+            position: absolute;
+            z-index: 200;
+        }
+
+        #material-background .material-circle-large {
+            margin-top: -80px;
+            margin-left: -80px;
+            border-radius: 50%;
+            width: 400px;
+            height: 400px;
+            background-color: #F44336;
+            position: absolute;
+            z-index: 200;
+        }
+
+        #material-background .material-parallelogram {
+            width: 50%;
+            height: 100%;
+            background: #8591d3;
+            transform: skew(20deg);
+            -webkit-transform: skew(20deg);
+            position: absolute;
+            z-index: 10;
+        }
+
+        #material-background .material-shadow-low {
+            box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 2px 2px rgba(0, 0, 0, 0.21);
+        }
+
+
+        #material-background .material-shadow-strong {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+        }
+
+        #material-background .material-shadow-strongest {
+            box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
+        }
+    </style>
+
+    <style>
+        .btn-sq-lg {
+            width: 150px !important;
+            height: 150px !important;
+        }
+
+        .btn-sq {
+            width: 100px !important;
+            height: 100px !important;
+            font-size: 10px;
+        }
+
+        .btn-sq-sm {
+            width: 50px !important;
+            height: 50px !important;
+            font-size: 10px;
+        }
+
+        .btn-sq-xs {
+            width: 25px !important;
+            height: 25px !important;
+            padding: 2px;
+        }
+    </style>
+
+
+
+    <style>
+        .iconpanel {
+            /*border: 16px solid #f3f3f3;*/
+            /*border-radius: 50%;*/
+            /*border-top: 16px solid blue;*/
+            /*border-right: 16px solid green;*/
+            /*border-bottom: 16px solid red;*/
+            /*border-left: 16px solid pink;*/
+            left: 50%;
+            top: 50%;
+            position: absolute;
+            z-index: 1000;
+        }
+
+        .pageheading {
+            left: 50%;
+            top: 5%;
+            position: absolute;
+            z-index: 1000;
+        }
+
+        .floating-button{
+            width:80px;
+            height: 80px;
+            font-size: x-small;
+            font-weight: bold;
+            /* background: cornflowerblue; */
+            background: #337ab7;
+            color:#FFF;
+            padding:5px;
+            margin: 50px;
+            text-align:center;            
+            right:0;
+            bottom:0;
+            position:fixed; 
+            float:right;
+            border-radius: 50%;
+        }
+    </style>
+    <script>
+        $(function () {
+            setTimeout(function () {
+                $('.loader').hide();
+                $('#main').show();
+
+                $('.pageheading').css("margin-left", 0 - ($('.pageheading').width() / 2));
+
+                var width = 0;
+                var height = $('.iconpanel').height();
+
+                $('.iconpanel > .row > .col-lg-12 > p').children().each(function () {
+                    width += $(this).width() + 32;
+                });
+
+                $('.iconpanel').css("margin-left", 0 - (width / 6));
+                $('.iconpanel').css("margin-top", 0 - (height / 3));
+
+                var tourKey = window.location.href.replace("/launch/", "").replace("https://", "").replace("http://", "").replace(/\//g,"_").replace(/\./g,"_").replace(/:/g, "_");                
+
+                if(localStorage.getItem(tourKey + '_end') == "yes"){
+                    $('#relaunch-tour').show();
+                }
+
+                // Instance the tour
+                tour = new Tour({
+                    name: tourKey,
+                steps: [
+                {
+                    element: "#db-manager",
+                    title: "Step #1: Database Administration - Create a MySQL Database",
+                    content: "If you have a MySQL server installed in your environment, you can manage everything from this Database Administration tool.<br/><br/>You can create a database, user, tables, views, stored procedures, etc. It is a lightweight utility and will be very handy throughout your project.<br/><br/><b>If you already have an existing connection string to your database, please directly proceed with the next step - API Configuration.</b>"
+                },
+                {
+                    element: "#api-config",
+                    title: "Step #2: API Configuration - Connect this instance of pRESTige to your database",
+                    content: "pRESTige does its magic by automatically transforming your database into a full-fledged backend server. <br/> <br/>So now it's time to connect it to the database that you created in Step #1.<br/> <br/>You will be asked for your administrative username and password.<br/> <br/>Default is <b>admin/admin</b>, but you can change it by going to the <i>Code Editor</i> and change it from the <i>Account -> Password</i> section in the sidebar on the right-hand side in the Code Editor."
+                },
+                {
+                    element: "#api-docs",
+                    title: "Step #3: API Documentation - Experience the Magic!",
+                    content: "See your database tables (along with its foreign key references) get turned into a full-fledged RESTful API server. And not just the tables, also views and stored procedures! <br/> <br/>All of these RESTful APIs are conforming to the Open API standards with full documentation automatically generated! <br/> <br/><b>O M G!</b><br/><br/><i>Note:<br/>Of course, if you created an empty database in Step #1, then you won't see much, so go back to the Database Administration tool, add a few tables, and come back here!</i>"
+                },
+                {
+                    element: "#code-editor",
+                    title: "A full-fledged Code Editor right within your browser!",
+                    content: "Now that you have your backend ready, probably just withing 5 minutes, and you are already happy! Get ready for the next surprise. <br/><br/>Launch the Code Editor with the default credentials <b>admin/admin</b>, and start building awesome applications right from your browser!<br/><br/>Yes, you can use AngularJS, VueJS, Plain old BootStrap and jQuery, anything that you like!"
+                },
+                {
+                    element: "#code-editor-new",
+                    title: "Auto-complete experience similar to Visual Studio Code right within your browser!",
+                    content: "And if you are married to Visual Studio Code, don't get disheartened by the previous code editor! This new editor is like running your favorite VSCode right within the browser!"
+                },
+                {
+                    element: "#html-builder",
+                    title: "HTML5 Builder",
+                    content: "Don't know how to design HTML? No worries! Drag and Drop UI Builder right at your doorstep!"
+                },
+                {
+                    element: "#online-terminal",
+                    title: "Online Terminal",
+                    content: "Experience the flexibility of managing your environment using your beloved Linux terminal from your browser!"
+                },
+                {
+                    element: "#file-manager",
+                    title: "File Manager",
+                    content: "Do the advanced file management in your environment, from the browser!"
+                },
+                {
+                    element: "#api-test",
+                    title: "API Testing",
+                    content: "Advanced API Testing, if you are not satisfied with the testing capabilities of the API Documentation section!"
+                },
+                {
+                    element: "#node-config",
+                    title: "Node.JS in Shared Hosting",
+                    content: "You haven't seen anything like this so far! Even if your shared hosting provider only allows PHP and does not allow Node.JS, you can still run Node.JS! <br/><br/><b>Say, O M G!</b>"
+                },
+                {
+                    element: "#python-config",
+                    title: "Python in Shared Hosting",
+                    content: "You haven't seen anything like this so far! Even if your shared hosting provider only allows PHP and does not allow Python, you can still run Python! <br/><br/><b>Say, O M G again!</b>"
+                },
+                {
+                    element: "#example-apps",
+                    title: "Some front-end examples",
+                    content: "To understand how easily you can utilize the full potential of the pRESTige magical backend. You can access the source code from the <b>Code Editor.</b>"
+                },
+                {
+                    element: "#online-docs",
+                    title: "Thank You!",
+                    content: "Thank you for coming this far! If you wish to study the pRESTige magic tricks in-depth, visit the online documentation."
+                }
+
+                ],
+                onEnd: function(){
+                    $('#relaunch-tour').show();
+                }});
+
+                // Initialize the tour
+                tour.init();
+
+                // Start the tour
+                tour.start();
+
+                relaunchTour = function(){
+                    $('#relaunch-tour').hide();
+                    tour.restart();
+                };
+
+            }, 1000);
+        });
+    </script>
+</head>
+
+<body>
+    <div class="loader"></div>
+    <!--<div id="material-background"></div>-->
+    <div id="main" style="display:none;">
+        <div class="pageheading">
+            <a href="https://prestigeframework.com" target="_blank"><img
+                    src="../ide/workspace/web/examples/images/logo.png" alt="pRESTige"></img></a>
+        </div>
+        <div class="container iconpanel">
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>
+                        <a id="your-app" href="../ide/workspace/web/" target="_blank" class="btn btn-sq btn-primary"
+                            >
+                            <i class="fa fa-adn fa-5x"></i><br />
+                            Your <br>Application
+                        </a>
+                        <a id="example-apps" href="../ide/workspace/web/examples/" target="_blank" class="btn btn-sq btn-primary"
+                            style="background:chocolate; border: chocolate;"
+                            >
+                            <i class="fa fa-adn fa-5x"></i><br />
+                            Example <br>Applications
+                        </a>
+                        <a id="api-docs" href="../api/docs/" target="_blank" class="btn btn-sq btn-success">
+                            <i class="fa fa-file-text-o fa-5x"></i><br />
+                            API <br>Documentation
+                        </a>
+                        <a id="api-test" href="../api/test/" target="_blank" class="btn btn-sq btn-danger">
+                            <i class="fa fa-exchange fa-5x"></i><br />
+                            API <br>Testing
+                        </a>
+                        <a id="api-config" href="../api/configure/" target="_blank" class="btn btn-sq btn-danger"
+                            style="background:grey; border:grey;">
+                            <i class="fa fa-gear fa-5x"></i><br />
+                            API <br>Configuration
+                        </a>                        
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>
+                        <a id="html-builder" href="../builder/" target="_blank" class="btn btn-sq btn-primary"
+                            style="background:orangered; border: orangered;">
+                            <i class="fa fa-html5 fa-5x"></i><br />
+                            HTML5 <br>Builder
+                        </a>
+                        <a id="code-editor" href="../ide/" target="_blank" class="btn btn-sq btn-danger"
+                            style="background:black; border:black;">
+                            <i class="fa fa-file-code-o fa-5x"></i><br />
+                            Code <br>Editor
+                        </a>
+                        <a id="code-editor-new" href="../editor/" target="_blank" class="btn btn-sq btn-primary"
+                            style="background:purple; border:purple;">
+                            <i class="fa fa-file-code-o fa-5x"></i><br />
+                            New Code <br>Editor
+                        </a>
+                        <a id="db-manager" href="../db/" target="_blank" class="btn btn-sq btn-primary"
+                            style="background:blue; border: blue;">
+                            <i class="fa fa-database fa-5x"></i><br />
+                            Database <br>Administration
+                        </a>
+                        <a id="file-manager" href="../fm/" target="_blank" class="btn btn-sq btn-primary"
+                            style="background:teal; border: teal;">
+                            <i class="fa fa-files-o fa-5x"></i><br />
+                            File <br>Manager
+                        </a>                        
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>
+
+                        <a id="node-config" href="../node/" target="_blank" class="btn btn-sq btn-danger"
+                            style="background:darkgreen; border:darkgreen;">
+                            <i class="fa fa-gear fa-5x"></i><br />
+                            Node.JS <br>Administration
+                        </a>
+                        <a id="python-config" href="../python/" target="_blank" class="btn btn-sq btn-danger"
+                            style="background:darkslateblue; border:darkslateblue;">
+                            <i class="fa fa-gear fa-5x"></i><br />
+                            Python <br>Administration
+                        </a>
+                        <a id="lua-config" href="../lua/" target="_blank" class="btn btn-sq btn-danger"
+                            style="background:darkblue; border:darkblue;">
+                            <i class="fa fa-gear fa-5x"></i><br />
+                            Lua <br>Administration
+                        </a>
+                        <a id="online-terminal" href="../terminal/" target="_blank" class="btn btn-sq btn-primary"
+                            style="background:darkslategray; border:darkslategray;">
+                            <i class="fa fa-terminal fa-5x"></i><br />
+                            Online <br>Terminal
+                        </a>
+                        <a id="online-docs" href="https://github.com/geekypedia/pRESTige/blob/master/README.md#introduction"
+                            target="_blank" class="btn btn-sq btn-primary"
+                            style="background:brown; border:brown;">
+                            <i class="fa fa-book fa-5x"></i><br />
+                            Online <br>Documentation
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div>
+                <button type="button" id="relaunch-tour" style="display: none; z-index: 10000;" class="floating-button" onclick="relaunchTour()">RELAUNCH TOUR</button>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
