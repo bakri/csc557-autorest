@@ -5,4 +5,5 @@ ADD app/ /app
 
 EXPOSE 80 3306
 
+VOLUME ["/app", "/var/lib/mysql"]
 CMD ["/run.sh"]
