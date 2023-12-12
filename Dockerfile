@@ -1,4 +1,4 @@
-FROM mattrayner/lamp:latest-1804-php7
+FROM mattrayner/lamp:latest-1404
 
 # Your custom commands
 ADD app/ /app
